@@ -1,5 +1,7 @@
 import { Input } from "./components/forms/Input.jsx";
 import { Checkbox } from "./components/forms/Checkbox.jsx";
+import { ProductCategoryRow } from "./components/product/ProductCategoryRow.jsx";
+import { ProductRow } from "./components/product/ProductRow.jsx";
 
 const Product = [
   { category: "Fruits", price: "$1", stocked: true, name: "Apple" },
@@ -12,7 +14,8 @@ const Product = [
 
 function App() {
   return <div className="container my-3">
-      <SearchBar />
+    <SearchBar />
+    <ProductTable products={Product} />
   </div>
 }
 
@@ -20,9 +23,34 @@ function SearchBar() {
   return <div>
     <div className="mb-3">
       <Input value="" onChange={() => null} placeholder="Rechercher..." />
-      <Checkbox id="stocked" checked={false} onChange={() => null} label="N'afficher que les produits en stock"/>
+      <Checkbox id="stocked" checked={false} onChange={() => null} label="N'afficher que les produits en stock" />
     </div>
   </div>
 }
 
+function ProductTable ({ products }) {
+  const rows = []
+  let lastCategory = null
+
+  for (let product of products) {
+    if (product.category !== lastCategory) {
+      rows.push(<ProductCategoryRow key={product.category} name={product.category} />)
+    }
+    lastCategory = product.category
+    rows.push(<ProductRow product={product} key={product.name} />)
+  }
+
+  return <table className="table">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Prix</th>
+      </tr>
+    </thead>
+    <tbody>
+      {rows}
+    </tbody>
+  </table>
+
+}
 export default App
